@@ -1,0 +1,11 @@
+# Core dependencies for Thumbtack auto-responder
+seleniumbase==4.24.5
+imap-tools==1.7.0
+python-dotenv==1.0.0
+
+# Additional utilities
+Pillow==10.2.0
+requests==2.31.0
+
+# Note: pyvirtualdisplay is only needed for Linux Docker environment
+# On Mac, it's not required as we have native display
