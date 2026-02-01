@@ -95,12 +95,11 @@ class ThumbтackBrowser:
             options.add_argument("--disable-blink-features=AutomationControlled")
 
             # Initialize undetected Chrome with profile
-            # driver_executable_path will be auto-downloaded for the current Chrome version
+            # Explicitly use Chrome version 144
             self.driver = uc.Chrome(
                 options=options,
                 use_subprocess=True,
-                driver_executable_path=None,  # Auto-download correct version
-                browser_executable_path=None   # Use system Chrome
+                version_main=144  # Match installed Chrome version
             )
 
             # Set window size
