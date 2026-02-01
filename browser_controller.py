@@ -83,19 +83,35 @@ class ThumbтackBrowser:
         logger.info("🚀 Starting browser with stealth mode...")
 
         try:
+            import os
+            from selenium import webdriver
+
+            # Create profile directory if it doesn't exist
+            os.makedirs(self.profile_dir, exist_ok=True)
+
+            # Configure Chrome options for profile persistence
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument(f"--user-data-dir={self.profile_dir}")
+            chrome_options.add_argument("--no-first-run")
+            chrome_options.add_argument("--no-default-browser-check")
+            chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+            chrome_options.add_experimental_option('useAutomationExtension', False)
+
             # Initialize SeleniumBase Driver with undetected mode
             self.driver = Driver(
                 uc=True,  # Undetected ChromeDriver mode (critical!)
-                headless=False  # Use Xvfb instead of headless mode
+                headless=False,  # Use Xvfb instead of headless mode
+                chromium_arg=" ".join([
+                    f"--user-data-dir={self.profile_dir}",
+                    "--no-first-run",
+                    "--no-default-browser-check"
+                ])
             )
 
             # Set window size after initialization
             self.driver.set_window_size(1920, 1080)
 
-            # Note: user_data_dir must be set via Chrome options in newer versions
-            # Session persistence works automatically with uc mode
-
-            logger.info("✅ Browser started successfully")
+            logger.info(f"✅ Browser started successfully (profile: {self.profile_dir})")
             return True
 
         except Exception as e:
