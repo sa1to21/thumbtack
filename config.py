@@ -24,7 +24,7 @@ class Config:
     BROWSER_RESTART_INTERVAL = int(os.getenv("BROWSER_RESTART_INTERVAL", "7200"))
 
     # Thumbtack settings
-    THUMBTACK_INBOX_URL = "https://www.thumbtack.com/inbox"
+    THUMBTACK_INBOX_URL = "https://www.thumbtack.com/pro-inbox/"
 
     # Response template (can be customized)
     DEFAULT_MESSAGE = os.getenv(

@@ -4,8 +4,9 @@ Browser controller with human-like behavior for Thumbtack automation
 import time
 import random
 import logging
+import os
 from typing import Optional
-from seleniumbase import Driver
+import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -83,32 +84,24 @@ class ThumbтackBrowser:
         logger.info("🚀 Starting browser with stealth mode...")
 
         try:
-            import os
-            from selenium import webdriver
-
             # Create profile directory if it doesn't exist
             os.makedirs(self.profile_dir, exist_ok=True)
 
             # Configure Chrome options for profile persistence
-            chrome_options = webdriver.ChromeOptions()
-            chrome_options.add_argument(f"--user-data-dir={self.profile_dir}")
-            chrome_options.add_argument("--no-first-run")
-            chrome_options.add_argument("--no-default-browser-check")
-            chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-            chrome_options.add_experimental_option('useAutomationExtension', False)
+            options = uc.ChromeOptions()
+            options.add_argument(f"--user-data-dir={self.profile_dir}")
+            options.add_argument("--no-first-run")
+            options.add_argument("--no-default-browser-check")
+            options.add_argument("--disable-blink-features=AutomationControlled")
 
-            # Initialize SeleniumBase Driver with undetected mode
-            self.driver = Driver(
-                uc=True,  # Undetected ChromeDriver mode (critical!)
-                headless=False,  # Use Xvfb instead of headless mode
-                chromium_arg=" ".join([
-                    f"--user-data-dir={self.profile_dir}",
-                    "--no-first-run",
-                    "--no-default-browser-check"
-                ])
+            # Initialize undetected Chrome with profile
+            self.driver = uc.Chrome(
+                options=options,
+                use_subprocess=True,
+                version_main=None  # Auto-detect Chrome version
             )
 
-            # Set window size after initialization
+            # Set window size
             self.driver.set_window_size(1920, 1080)
 
             logger.info(f"✅ Browser started successfully (profile: {self.profile_dir})")
@@ -144,8 +137,8 @@ class ThumbтackBrowser:
             True if logged in, False otherwise
         """
         try:
-            # Navigate to inbox
-            self.driver.get("https://www.thumbtack.com/inbox")
+            # Navigate to pro inbox
+            self.driver.get("https://www.thumbtack.com/pro-inbox/")
             time.sleep(3)
 
             # Check if we're on login page or inbox
@@ -175,9 +168,9 @@ class ThumbтackBrowser:
             return False
 
     def navigate_to_inbox(self):
-        """Navigate to Thumbtack inbox"""
-        logger.info("📬 Navigating to inbox...")
-        self.driver.get("https://www.thumbtack.com/inbox")
+        """Navigate to Thumbtack pro inbox"""
+        logger.info("📬 Navigating to pro inbox...")
+        self.driver.get("https://www.thumbtack.com/pro-inbox/")
         HumanBehavior.random_delay(2, 4)
 
     def find_unread_conversation(self):

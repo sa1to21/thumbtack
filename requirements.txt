@@ -1,5 +1,6 @@
 # Core dependencies for Thumbtack auto-responder
-seleniumbase==4.24.5
+undetected-chromedriver>=3.5.4
+selenium>=4.15.0
 imap-tools==1.7.0
 python-dotenv==1.0.0
 
